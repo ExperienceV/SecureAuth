@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <div class="home-container">
+        <h1>Bienvenido a la Página Home</h1>
+        <p>Has iniciado sesión correctamente.</p>
+        <button id="logout-button">Cerrar Sesión</button>
+    </div>
+
+    <script>
+        document.getElementById("logout-button").addEventListener("click", async () => {
+            const response = await fetch("/logout", {
+                method: "POST",
+                credentials: "include",  // Incluir cookies
+            });
+
+            if (response.ok) {
+                window.location.href = "/";  // Redirigir a la página de inicio de sesión
+            }
+        });
+    </script>
+</body>
+</html>

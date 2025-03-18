@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Iniciar Sesión</h1>
+        <form id="login-form">
+            <label for="username">Usuario:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+        <p id="error-message" class="error"></p>
+    </div>
+
+    <script>
+        document.getElementById("login-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username, password }),
+                credentials: "include",  // Incluir cookies
+            });
+
+            if (response.ok) {
+                window.location.href = "/home";  // Redirigir a la página home
+            } else {
+                const errorMessage = await response.text();
+                document.getElementById("error-message").textContent = errorMessage;
+            }
+        });
+    </script>
+</body>
+</html>
