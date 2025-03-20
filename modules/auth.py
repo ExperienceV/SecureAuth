@@ -3,22 +3,22 @@ from jose import JWTError, jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-# Configuración de seguridad
+# Set up security
 SECRET_KEY = "ThisIsAVeryUltraSuperIncredibleSecReTKEY"  
 ALGORITHM = "HS256" 
 
-# Tiempos de expiración
+# Expiration times
 ACCESS_TOKEN_EXPIRE_MINUTES = 15  
 REFRESH_TOKEN_EXPIRE_DAYS = 7
 
-# Esquema de autenticación Bearer
+# Bearer authentication scheme
 security = HTTPBearer()
 
 def create_access_token(data: dict):
     """
-    Crea un token JWT de acceso.
-    - data: Datos a incluir en el token (por ejemplo, el nombre de usuario).
-    - exp: Tiempo de expiración del token (15 minutos por defecto).
+    Create a JWT access token.
+    - data: Data to include in the token (for example, the username).
+    - exp: Token expiration time (15 minutes by default).
     """
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -27,9 +27,9 @@ def create_access_token(data: dict):
 
 def create_refresh_token(data: dict):
     """
-    Crea un token JWT de refresco.
-    - data: Datos a incluir en el token.
-    - exp: Tiempo de expiración del token (7 días por defecto).
+    Create a refresh JWT token.
+    - data: Data to include in the token.
+    - exp: Token expiration time (7 days by default).
     """
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
@@ -38,10 +38,10 @@ def create_refresh_token(data: dict):
 
 def verify_token(token: str):
     """
-    Verifica la validez de un token JWT.
-    - token: Token JWT a verificar.
-    - Retorna el payload del token si es válido.
-    - Lanza una excepción HTTP 401 si el token es inválido o ha expirado.
+    Verifies the validity of a JWT token.
+    - token: JWT token to verify.
+    - Returns the token payload if valid.
+    - Throws an HTTP 401 exception if the token is invalid or has expired.
     """
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -54,9 +54,9 @@ def verify_token(token: str):
 
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     """
-    Obtiene el usuario actual a partir del token JWT.
-    - credentials: Credenciales de autenticación (token Bearer).
-    - Retorna el nombre de usuario extraído del token.
+    Gets the current user from the JWT token.
+    - credentials: Authentication credentials (Bearer token).
+    - Returns the username extracted from the token.
     """
     token = credentials.credentials
     payload = verify_token(token)
